@@ -14,4 +14,4 @@ RUN yarn install --non-interactive --frozen-lockfile
 COPY . /usr/src/app
 
 EXPOSE 80
-CMD ["yarn", "run", "start"]
+CMD ["yarn", "run", "deploy"]
