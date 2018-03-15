@@ -9,6 +9,11 @@ const execFileAsync = promisify(execFile);
 const readFileAsync = promisify(readFile);
 promisifyAll(gm.prototype);
 
+function getOutputFormat(type) {
+  if (type === 'image/png') return 'png';
+  return 'jpeg';
+}
+
 async function transferImage(file) {
   if (file.type === 'image/svg+xml') {
     return await readFileAsync(file.path);
@@ -21,6 +26,7 @@ async function transferImage(file) {
 
   return await gm(file.path)
     .resize(MAX_IMAGE_DIMENSION, MAX_IMAGE_DIMENSION, '>')
+    .setFormat(getOutputFormat(file.type))
     .toBufferAsync();
 }
 
