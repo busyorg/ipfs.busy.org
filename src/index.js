@@ -1,5 +1,3 @@
-const fs = require('fs');
-const util = require('util');
 const express = require('express');
 const compression = require('compression');
 const multipart = require('connect-multiparty');
@@ -7,8 +5,6 @@ const debug = require('debug')('busy-ipfs');
 const transferImage = require('./transferImage');
 const uploadAndPin = require('./uploadAndPin');
 const { MAX_FILE_SIZE } = require('./constants');
-
-const readFile = util.promisify(fs.readFile);
 
 const app = express();
 const multipartMiddleware = multipart();
@@ -29,12 +25,11 @@ app.post('/upload', multipartMiddleware, async (req, res) => {
       return res.status(413).json({ error: 'PAYLOAD_TOO_LARGE' });
     }
 
-    if (!file.type.match('image/.*')) {
+    if (!file.type.match('image/(?!gif)')) {
       return res.status(415).json({ error: 'UNSUPPORTED_MEDIA_TYPE' });
     }
 
-    const buffer =
-      file.type === 'image/gif' ? await readFile(file.path) : await transferImage(file.path);
+    const buffer = await transferImage(file.path);
 
     const hash = await uploadAndPin(buffer);
 
