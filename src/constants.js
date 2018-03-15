@@ -1,4 +1,5 @@
 module.exports = {
   MAX_IMAGE_DIMENSION: 960,
+  MAX_GIF_DIMENSION: 540,
   MAX_FILE_SIZE: 10485760,
 };
