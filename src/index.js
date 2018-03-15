@@ -25,11 +25,11 @@ app.post('/upload', multipartMiddleware, async (req, res) => {
       return res.status(413).json({ error: 'PAYLOAD_TOO_LARGE' });
     }
 
-    if (!file.type.match('image/(?!gif)')) {
+    if (!file.type.match('image/.*')) {
       return res.status(415).json({ error: 'UNSUPPORTED_MEDIA_TYPE' });
     }
 
-    const buffer = await transferImage(file.path);
+    const buffer = await transferImage(file);
 
     const hash = await uploadAndPin(buffer);
 
