@@ -35,7 +35,7 @@ app.post('/upload', multipartMiddleware, async (req, res) => {
     const hash = await uploadAndPin(buffer);
 
     const ipfsUrl = url.format({
-      protocol: 'http',
+      protocol: req.protocol,
       host: req.get('host'),
     });
 
