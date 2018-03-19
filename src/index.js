@@ -1,5 +1,6 @@
 const express = require('express');
 const compression = require('compression');
+const url = require('url');
 const multipart = require('connect-multiparty');
 const debug = require('debug')('busy-ipfs');
 const transferImage = require('./transferImage');
@@ -33,11 +34,12 @@ app.post('/upload', multipartMiddleware, async (req, res) => {
 
     const hash = await uploadAndPin(buffer);
 
-    return res.json({
-      name: file.name,
-      url: `http://localhost:8080/ipfs/${hash}`,
-      hash,
+    const ipfsUrl = url.format({
+      protocol: 'http',
+      host: req.get('host'),
     });
+
+    return res.json({ name: file.name, url: `${ipfsUrl}/ipfs/${hash}`, hash });
   } catch (err) {
     debug('Error occured during processing /upload', err);
     return res.status(501).json({ error: 'INTERNAL_SERVER_ERROR' });
