@@ -1,3 +1,5 @@
+const fs = require('fs');
+const util = require('util');
 const express = require('express');
 const compression = require('compression');
 const multipart = require('connect-multiparty');
@@ -5,6 +7,8 @@ const debug = require('debug')('busy-ipfs');
 const transferImage = require('./transferImage');
 const uploadAndPin = require('./uploadAndPin');
 const { MAX_FILE_SIZE } = require('./constants');
+
+const unlinkAsync = util.promisify(fs.unlink);
 
 const app = express();
 const multipartMiddleware = multipart();
@@ -32,6 +36,8 @@ app.post('/upload', multipartMiddleware, async (req, res) => {
     const buffer = await transferImage(file);
 
     const hash = await uploadAndPin(buffer);
+
+    await Promise.all(Object.values(req.files).map(file => unlinkAsync(file.path)));
 
     return res.json({ name: file.name, url: `https://gateway.ipfs.io/ipfs/${hash}`, hash });
   } catch (err) {
