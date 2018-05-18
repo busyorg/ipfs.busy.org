@@ -39,7 +39,7 @@ app.post('/upload', multipartMiddleware, async (req, res) => {
 
     await Promise.all(Object.values(req.files).map(file => unlinkAsync(file.path)));
 
-    return res.json({ name: file.name, url: `https://ipfs.busy.org/ipfs/${hash}`, hash });
+    return res.json({ name: file.name, url: `https://gateway.ipfs.io/ipfs/${hash}`, hash });
   } catch (err) {
     debug('Error occured during processing /upload', err);
     return res.status(501).json({ error: 'INTERNAL_SERVER_ERROR' });
