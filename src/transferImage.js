@@ -25,6 +25,7 @@ async function transferImage(file) {
   }
 
   return await gm(file.path)
+    .autoOrient()
     .resize(MAX_IMAGE_DIMENSION, MAX_IMAGE_DIMENSION, '>')
     .setFormat(getOutputFormat(file.type))
     .toBufferAsync();
