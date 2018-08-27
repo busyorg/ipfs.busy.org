@@ -1,4 +1,4 @@
-FROM node:8.2.0
+FROM node:8.11.4
 
 ENV PORT 80
 ENV NODE_ENV production
